@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Family Academy - cinematic learning platform for students, parents, teachers, and TV devices." />
+  <meta name="theme-color" content="#09111f" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Family Academy" />
+  <meta property="og:description" content="Cinematic learning platform for students, parents, teachers, and TV devices." />
+  <meta property="og:image" content="./og-preview.svg" />
+  <meta property="og:url" content="/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Family Academy" />
+  <meta name="twitter:description" content="Cinematic learning platform for students, parents, teachers, and TV devices." />
+  <title>Family Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="orbs orb-one"></div>
+  <div class="orbs orb-two"></div>
+  <div class="orbs orb-three"></div>
+
+  <main class="shell">
+    <section class="opening scene" data-scene="opening">
+      <div class="opening-copy">
+        <p class="eyebrow reveal">A cinematic learning platform</p>
+        <h1 class="title reveal delay-1">
+          Family Academy
+        </h1>
+        <p class="lede reveal delay-2">
+          The story begins in the classroom, travels through notes, quizzes, and progress,
+          then continues in the living room on TV. This is the front door to the platform,
+          not a generic admin page.
+        </p>
+
+        <div class="hero-actions reveal delay-3">
+          <a class="button primary" href="#story">Enter the story</a>
+          <a class="button secondary" href="#downloads">Go to downloads</a>
+        </div>
+
+        <div class="role-strip reveal delay-4">
+          <span>Student client</span>
+          <span>TV experience</span>
+          <span>Teacher workflow</span>
+          <span>Parent continuity</span>
+        </div>
+      </div>
+
+      <div class="opening-stage" aria-hidden="true">
+        <div class="stage-card">
+          <div class="stage-topline">
+            <span class="stage-chip">Opening credits</span>
+            <span class="stage-progress">01 / 05</span>
+          </div>
+          <div class="stage-screen">
+            <div class="screen-rim"></div>
+            <div class="screen-glow"></div>
+            <div class="screen-title">
+              <span class="screen-title-small">Family Academy</span>
+              <span class="screen-title-large">Learning in motion.</span>
+            </div>
+          </div>
+          <div class="stage-caption">
+            Scroll to move through the story. The frame changes as the journey changes.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-shell" id="story">
+      <div class="story-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">The sequence</p>
+          <h2>Scroll through the chapters.</h2>
+          <p>
+            The visuals and copy are designed like a film sequence. Each chapter changes the
+            atmosphere, the color, and the message instead of just stacking another block of text.
+          </p>
+
+          <div class="timeline">
+            <button class="timeline-dot active" data-jump="classroom" aria-label="Jump to classroom"></button>
+            <button class="timeline-dot" data-jump="study" aria-label="Jump to study"></button>
+            <button class="timeline-dot" data-jump="tv" aria-label="Jump to TV"></button>
+            <button class="timeline-dot" data-jump="governance" aria-label="Jump to governance"></button>
+            <button class="timeline-dot" data-jump="downloads" aria-label="Jump to downloads"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-rail">
+        <article class="chapter scene" id="classroom" data-scene="classroom">
+          <p class="chapter-index">Scene 01</p>
+          <h3>From school structure to a study story.</h3>
+          <p>
+            The platform is built around schools, categories, courses, chapters, and learning
+            content. The landing page should feel like the opening shot of a serious product:
+            clear, polished, and clearly educational.
+          </p>
+          <ul>
+            <li>Structured content hierarchy</li>
+            <li>Course and chapter navigation</li>
+            <li>Notes, questions, and exams</li>
+          </ul>
+        </article>
+
+        <article class="chapter scene" id="study" data-scene="study">
+          <p class="chapter-index">Scene 02</p>
+          <h3>The lesson expands when the student enters a chapter.</h3>
+          <p>
+            Video, notes, practice questions, and exams do not sit as separate modules here.
+            They feel like one flow: watch, read, answer, remember, and continue.
+          </p>
+          <ul>
+            <li>Video playback with progress continuity</li>
+            <li>Rich notes and offline comfort</li>
+            <li>Timed exams and results</li>
+          </ul>
+        </article>
+
+        <article class="chapter scene" id="tv" data-scene="tv">
+          <p class="chapter-index">Scene 03</p>
+          <h3>The lesson can continue on TV without losing its place.</h3>
+          <p>
+            The TV app is the living-room branch of the same system. It should feel like a
+            continuation of the lesson, not a separate product.
+          </p>
+          <ul>
+            <li>Pairing and remote-first control</li>
+            <li>Large-screen viewing flow</li>
+            <li>Simple navigation for TV devices</li>
+          </ul>
+        </article>
+
+        <article class="chapter scene" id="governance" data-scene="governance">
+          <p class="chapter-index">Scene 04</p>
+          <h3>The admin layer keeps the system governed.</h3>
+          <p>
+            Teachers, admins, and operators need clarity, not clutter. The product needs to
+            communicate trust, control, and operational calm.
+          </p>
+          <ul>
+            <li>Role-based access and dashboards</li>
+            <li>Payments, subscriptions, and review flow</li>
+            <li>Support, logs, and moderation</li>
+          </ul>
+        </article>
+
+        <article class="chapter scene downloads-scene" id="downloads" data-scene="downloads">
+          <p class="chapter-index">Scene 05</p>
+          <h3>Now the visitor can leave with the right app.</h3>
+          <p>
+            This section is the download gate. It is wired to a single config file, so you can
+            attach Render URLs, Cloudinary URLs, or any other hosted asset links without editing
+            the layout itself.
+          </p>
+          <div id="download-note" class="download-note"></div>
+          <div id="download-grid" class="download-grid"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="closing scene" data-scene="closing">
+      <div class="closing-grid">
+        <div>
+          <p class="eyebrow">Launch frame</p>
+          <h2>Not an admin page. A public doorway.</h2>
+          <p>
+            This repo is now dedicated to the landing page only. The admin application stays
+            separate, and the download links can be pointed at your own storage once you give the
+            final hosted URLs.
+          </p>
+        </div>
+        <div class="closing-card">
+          <p>Next things to attach:</p>
+          <ul>
+            <li>Public download URLs</li>
+            <li>Privacy policy and terms</li>
+            <li>Support contact</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./config.js"></script>
+  <script src="./script.js" defer></script>
+</body>
+</html>

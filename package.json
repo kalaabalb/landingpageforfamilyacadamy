@@ -1,0 +1,10 @@
+{
+  "name": "landingpageforfamilyacadamy",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "python3 -m http.server 3000 --bind 127.0.0.1",
+    "serve": "python3 -m http.server 3000 --bind 127.0.0.1",
+    "build": "echo 'Static site - no build step required'"
+  }
+}
