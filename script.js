@@ -1,200 +1,373 @@
 const config = window.FAMILY_ACADEMY_SITE_CONFIG || {};
+const scenes = Array.isArray(config.scenes) && config.scenes.length ? config.scenes : [];
+const books = Array.isArray(config.books) && config.books.length ? config.books : [];
+const downloads = config.downloads || {};
 
-const sceneThemes = {
-  opening: {
-    accent: '#d8b07e',
-    accent2: '#7ea8e7',
-    accent3: '#8cd3bd',
-  },
-  classroom: {
-    accent: '#c99a66',
-    accent2: '#7cabe8',
-    accent3: '#95d8c1',
-  },
-  study: {
-    accent: '#d7bb8a',
-    accent2: '#9ab7e6',
-    accent3: '#8fd0d2',
-  },
-  tv: {
-    accent: '#9dbde8',
-    accent2: '#d8b07e',
-    accent3: '#a7dfc9',
-  },
-  governance: {
-    accent: '#e0c38e',
-    accent2: '#86abd9',
-    accent3: '#94d8bf',
-  },
-  downloads: {
-    accent: '#dfb27b',
-    accent2: '#8bb4e8',
-    accent3: '#91ddc7',
-  },
-  closing: {
-    accent: '#d1aa75',
-    accent2: '#7faae2',
-    accent3: '#95d8be',
-  },
+const els = {
+  camera: document.getElementById('room-camera'),
+  shelf: document.getElementById('book-shelf'),
+  sceneProgress: document.getElementById('scene-progress'),
+  sceneName: document.getElementById('scene-name'),
+  sceneKicker: document.getElementById('scene-kicker'),
+  sceneTitle: document.getElementById('scene-title'),
+  sceneCopy: document.getElementById('scene-copy'),
+  sceneBullets: document.getElementById('scene-bullets'),
+  modal: document.getElementById('book-modal'),
+  modalCategory: document.getElementById('book-category'),
+  modalTitle: document.getElementById('book-title'),
+  modalSummary: document.getElementById('book-summary'),
+  modalPages: document.getElementById('book-pages'),
 };
 
-const scenes = [
-  {
-    id: 'opening',
-    progress: '01 / 05',
-    headline: 'Family Academy, opening like a film.',
-    copy:
-      'A public landing page for the platform. It is shaped like a story, not a brochure, so the visitor moves through learning, TV continuity, and control as if the system is unfolding on screen.',
-    bullets: ['Cinematic motion', 'Large-screen storytelling', 'Role-aware product flow'],
-  },
-  {
-    id: 'classroom',
-    progress: '02 / 05',
-    headline: 'The classroom becomes a chapter.',
-    copy:
-      'The platform is built around schools, categories, courses, and chapters. This is the moment where the page starts to feel like a lesson beginning rather than a website being scrolled.',
-    bullets: ['Structured academics', 'Courses and chapters', 'Notes and practice'],
-  },
-  {
-    id: 'study',
-    progress: '03 / 05',
-    headline: 'The lesson deepens.',
-    copy:
-      'Inside a chapter, video, notes, quizzes, and exams work together. The story should feel like the user is entering a learning room, not clicking a bunch of unrelated cards.',
-    bullets: ['Video continuity', 'Offline-friendly notes', 'Timed exams and progress'],
-  },
-  {
-    id: 'tv',
-    progress: '04 / 05',
-    headline: 'The same story continues on TV.',
-    copy:
-      'The TV app is the living-room companion. It keeps the platform accessible on large screens, where remote control and simple navigation matter more than touch gestures.',
-    bullets: ['Remote-first flow', 'Big-screen continuity', 'Paired device experience'],
-  },
-  {
-    id: 'governance',
-    progress: '05 / 05',
-    headline: 'The system stays governed.',
-    copy:
-      'Admin and teacher roles stay behind the public frontage. The landing page should still hint at trust, support, payments, and operational clarity without turning into an admin dashboard.',
-    bullets: ['Role-based access', 'Payments and support', 'Logs and moderation'],
-  },
-];
-
-const stage = {
-  title: document.querySelector('.screen-title-large'),
-  small: document.querySelector('.screen-title-small'),
-  caption: document.querySelector('.stage-caption'),
-  progress: document.querySelector('.stage-progress'),
-  chip: document.querySelector('.stage-chip'),
-  dots: Array.from(document.querySelectorAll('.timeline-dot')),
+const rowLabels = {
+  top: 'Entrance shelf',
+  middle: 'Learning shelf',
+  bottom: 'Family shelf',
 };
 
-const setTheme = (sceneId) => {
-  const theme = sceneThemes[sceneId] || sceneThemes.opening;
-  document.documentElement.style.setProperty('--accent', theme.accent);
-  document.documentElement.style.setProperty('--accent-2', theme.accent2);
-  document.documentElement.style.setProperty('--accent-3', theme.accent3);
+const sceneLabels = {
+  arrival: 'Arrival',
+  desk: 'Desk',
+  shelf: 'Shelf',
+  tv: 'TV',
+  downloads: 'Downloads',
+  support: 'Support',
 };
 
-const setActiveScene = (sceneId) => {
-  const scene = scenes.find((item) => item.id === sceneId) || scenes[0];
-  document.body.dataset.scene = scene.id;
-  setTheme(scene.id);
-  stage.title.textContent = scene.headline;
-  stage.small.textContent = scene.id === 'opening' ? 'Family Academy' : scene.id.replace(/^[a-z]/, (m) => m.toUpperCase());
-  stage.caption.textContent = scene.copy;
-  stage.progress.textContent = scene.progress;
-  stage.chip.textContent = scene.id === 'opening' ? 'Opening credits' : scene.id;
+const state = {
+  sceneIndex: 0,
+  bookId: null,
+  bookPage: 0,
+  pointerX: 0,
+  pointerY: 0,
+  lastMoveAt: 0,
+  touchStartY: 0,
+  touchStartX: 0,
+  touchActive: false,
+};
 
-  stage.dots.forEach((dot) => {
-    dot.classList.toggle('active', dot.dataset.jump === scene.id);
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const safeText = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const sceneById = (id) => scenes.findIndex((scene) => scene.id === id);
+
+const setRootTheme = (scene) => {
+  if (!scene) return;
+  const accent = scene.accent || {};
+  document.documentElement.style.setProperty('--accent', accent.main || '#d6ae79');
+  document.documentElement.style.setProperty('--accent-2', accent.secondary || '#8daee4');
+  document.documentElement.style.setProperty('--accent-3', accent.glow || '#dff1e4');
+  document.documentElement.style.setProperty('--glow', `${accent.glow || '#efd8b6'}44`);
+};
+
+const updateSceneUI = (scene) => {
+  if (!scene) return;
+  els.sceneProgress.textContent = `${String(state.sceneIndex + 1).padStart(2, '0')} / ${String(scenes.length).padStart(2, '0')}`;
+  els.sceneName.textContent = sceneLabels[scene.id] || scene.id.charAt(0).toUpperCase() + scene.id.slice(1);
+  els.sceneKicker.textContent = scene.kicker || 'Cinematic frame';
+  els.sceneTitle.textContent = scene.title || config.brand || 'Family Academy';
+  els.sceneCopy.textContent = scene.copy || '';
+  els.sceneBullets.innerHTML = (scene.bullets || [])
+    .map((bullet) => `<li>${safeText(bullet)}</li>`)
+    .join('');
+
+  document.querySelectorAll('.compass-chip').forEach((chip) => {
+    chip.classList.toggle('active', chip.dataset.sceneJump === scene.id);
   });
 };
 
-const renderDownloads = () => {
-  const grid = document.getElementById('download-grid');
-  const note = document.getElementById('download-note');
-  if (!grid) return;
+const applyScene = (nextIndex, { immediate = false } = {}) => {
+  if (!scenes.length) return;
+  state.sceneIndex = clamp(nextIndex, 0, scenes.length - 1);
+  const scene = scenes[state.sceneIndex];
 
-  const client = config.downloads?.client || [];
-  const tv = config.downloads?.tv || [];
+  if (!scene) return;
 
-  note.textContent = config.brand
-    ? `${config.brand} downloads are wired through this single config file. Drop in your Render or Cloudinary URLs when they are ready, and the buttons will point there without changing the layout.`
-    : 'Download links are wired through one config file so they can point at your hosted files later.';
+  document.body.dataset.scene = scene.id;
+  setRootTheme(scene);
+  updateSceneUI(scene);
 
-  const groups = [
-    { title: 'Client app', badge: 'Student / desktop / parent', items: client },
-    { title: 'TV app', badge: 'Living room / remote / paired', items: tv },
-  ];
+  const camera = scene.camera || {};
+  const style = els.camera?.style;
+  if (style) {
+    style.setProperty('--cam-x', camera.x || '0px');
+    style.setProperty('--cam-y', camera.y || '0px');
+    style.setProperty('--cam-z', camera.z || '0px');
+    style.setProperty('--cam-rx', camera.rx || '-4deg');
+    style.setProperty('--cam-ry', camera.ry || '0deg');
+    style.setProperty('transition-duration', immediate ? '0ms' : '900ms');
+  }
+};
 
-  grid.innerHTML = groups
-    .map(
-      (group) => `
-        <article class="download-card">
-          <div class="download-badge">${group.badge}</div>
-          <h4>${group.title}</h4>
-          <p class="download-tile-note">If a link is empty, fill it in <code>config.js</code> with your hosted file URL.</p>
-          <div class="download-list">
-            ${group.items
-              .map((item) => {
-                const hasHref = Boolean(item.href && item.href.trim());
-                const target = hasHref ? item.href.trim() : '#downloads';
-                const classes = hasHref ? 'download-link' : 'download-link missing';
-                const label = hasHref ? 'Download' : 'Attach URL';
-                return `
-                  <a class="${classes}" href="${target}" ${hasHref ? 'target="_blank" rel="noreferrer"' : ''}>
-                    <span>
-                      <strong>${item.title}</strong>
-                      <small>${item.note}</small>
-                    </span>
-                    <span>${label}</span>
-                  </a>
-                `;
-              })
+const renderShelf = () => {
+  if (!els.shelf) return;
+
+  const grouped = books.reduce((acc, book) => {
+    const row = book.row || 'middle';
+    if (!acc[row]) acc[row] = [];
+    acc[row].push(book);
+    return acc;
+  }, {});
+
+  const rows = ['top', 'middle', 'bottom'];
+
+  els.shelf.innerHTML = rows
+    .map((row) => {
+      const rowBooks = grouped[row] || [];
+      return `
+        <section class="book-row" data-row="${row}">
+          <div class="book-row-label">${rowLabels[row] || row}</div>
+          <div class="book-row-books">
+            ${rowBooks
+              .map(
+                (book) => `
+                  <button
+                    type="button"
+                    class="book"
+                    data-book-id="${book.id}"
+                    data-corner="${safeText(book.corner || rowLabels[row] || 'Guide')}"
+                    style="--book-accent: ${book.accent || '#d6ae79'}"
+                    aria-label="Open ${safeText(book.title)}"
+                  >
+                    <span class="book-spine"></span>
+                    <span class="book-top-label">${safeText(book.corner || rowLabels[row] || 'Guide')}</span>
+                    <span class="book-title">${safeText(book.title)}</span>
+                    <span class="book-summary">${safeText(book.summary || '')}</span>
+                  </button>
+                `,
+              )
               .join('')}
           </div>
-        </article>
-      `,
-    )
+        </section>
+      `;
+    })
     .join('');
+
+  els.shelf.querySelectorAll('[data-book-id]').forEach((button) => {
+    button.addEventListener('click', () => openBook(button.dataset.bookId));
+  });
 };
 
-const initScrollObserver = () => {
-  const targets = document.querySelectorAll('.scene[data-scene]');
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+const buildDownloadCards = (items) =>
+  (items || [])
+    .map((item) => {
+      const href = (item.href || '').trim();
+      const isReady = Boolean(href);
+      const classes = ['download-card'];
+      if (!isReady) classes.push('missing');
 
-      if (visible) {
-        setActiveScene(visible.target.dataset.scene);
-      }
-    },
-    { threshold: [0.3, 0.45, 0.6, 0.75] },
-  );
+      const inner = `
+        <span>
+          <strong>${safeText(item.title)}</strong>
+          <small>${safeText(item.note || item.fileName || '')}</small>
+        </span>
+        <span>${isReady ? 'Download' : 'Attach URL'}</span>
+      `;
 
-  targets.forEach((target) => observer.observe(target));
+      return isReady
+        ? `<a class="${classes.join(' ')}" href="${href}" target="_blank" rel="noreferrer">${inner}</a>`
+        : `<div class="${classes.join(' ')}" aria-disabled="true">${inner}</div>`;
+    })
+    .join('');
+
+const renderBookPage = (book, pageIndex) => {
+  const page = book.pages?.[pageIndex] || book.pages?.[0] || {};
+  const pageNumber = String(pageIndex + 1).padStart(2, '0');
+  const totalPages = String(Math.max(book.pages?.length || 1, 1)).padStart(2, '0');
+  const pageBullets = (page.bullets || [])
+    .map((bullet) => `<li>${safeText(bullet)}</li>`)
+    .join('');
+
+  if (book.id === 'downloads') {
+    const clientCards = buildDownloadCards(downloads.client || []);
+    const tvCards = buildDownloadCards(downloads.tv || []);
+    const groupMarkup = pageIndex === 0
+      ? `
+        <div class="download-group">
+          <div class="download-group-label">Client builds</div>
+          ${clientCards}
+        </div>
+      `
+      : `
+        <div class="download-group">
+          <div class="download-group-label">TV builds</div>
+          ${tvCards}
+        </div>
+      `;
+
+    return `
+      <article class="page page--downloads" data-page-index="${pageIndex}">
+        <h4>${safeText(page.title || `Page ${pageNumber}`)}</h4>
+        <p>${safeText(page.text || '')}</p>
+        ${groupMarkup}
+      </article>
+    `;
+  }
+
+  return `
+    <article class="page" data-page-index="${pageIndex}">
+      <h4>${safeText(page.title || `Page ${pageNumber}`)}</h4>
+      <p>${safeText(page.text || '')}</p>
+      ${pageBullets ? `<ul>${pageBullets}</ul>` : ''}
+    </article>
+  `;
 };
 
-const initTimeline = () => {
-  stage.dots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const target = document.getElementById(dot.dataset.jump);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+const renderBookModal = () => {
+  const book = books.find((item) => item.id === state.bookId);
+  if (!book) return;
+
+  els.modalCategory.textContent = `${book.corner || 'Library guide'} · Page ${String(state.bookPage + 1).padStart(2, '0')} / ${String(Math.max(book.pages?.length || 1, 1)).padStart(2, '0')}`;
+  els.modalTitle.textContent = book.title || 'Guide';
+  els.modalSummary.textContent = book.summary || '';
+  els.modalPages.innerHTML = renderBookPage(book, state.bookPage);
+};
+
+const openBook = (bookId) => {
+  const nextBook = books.find((book) => book.id === bookId);
+  if (!nextBook) return;
+
+  state.bookId = bookId;
+  state.bookPage = 0;
+  document.body.dataset.modalOpen = 'true';
+  els.modal.classList.add('open');
+  els.modal.setAttribute('aria-hidden', 'false');
+  renderBookModal();
+};
+
+const closeBook = () => {
+  state.bookId = null;
+  state.bookPage = 0;
+  els.modal.classList.remove('open');
+  els.modal.setAttribute('aria-hidden', 'true');
+  document.body.dataset.modalOpen = 'false';
+};
+
+const moveBookPage = (direction) => {
+  const book = books.find((item) => item.id === state.bookId);
+  if (!book) return;
+  const total = Math.max(book.pages?.length || 1, 1);
+  state.bookPage = (state.bookPage + direction + total) % total;
+  renderBookModal();
+};
+
+const moveScene = (direction) => {
+  const next = clamp(state.sceneIndex + direction, 0, scenes.length - 1);
+  if (next === state.sceneIndex) return;
+  applyScene(next);
+};
+
+const jumpToScene = (sceneId) => {
+  const next = sceneById(sceneId);
+  if (next >= 0) applyScene(next);
+};
+
+const initControls = () => {
+  document.querySelectorAll('[data-scene-jump]').forEach((button) => {
+    button.addEventListener('click', () => jumpToScene(button.dataset.sceneJump));
+  });
+
+  document.querySelectorAll('[data-step]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const step = button.dataset.step;
+      moveScene(step === 'next' ? 1 : -1);
     });
   });
+
+  document.querySelectorAll('[data-open-book]').forEach((button) => {
+    button.addEventListener('click', () => openBook(button.dataset.openBook));
+  });
+
+  document.querySelectorAll('[data-close-modal]').forEach((button) => {
+    button.addEventListener('click', closeBook);
+  });
+
+  document.querySelectorAll('[data-page-nav]').forEach((button) => {
+    button.addEventListener('click', () => {
+      moveBookPage(button.dataset.pageNav === 'next' ? 1 : -1);
+    });
+  });
+
+  window.addEventListener(
+    'wheel',
+    (event) => {
+      if (document.body.dataset.modalOpen === 'true') return;
+      event.preventDefault();
+      const now = performance.now();
+      if (now - state.lastMoveAt < 650) return;
+      state.lastMoveAt = now;
+      moveScene(event.deltaY > 0 ? 1 : -1);
+    },
+    { passive: false },
+  );
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.dataset.modalOpen === 'true') {
+      closeBook();
+      return;
+    }
+
+    if (document.body.dataset.modalOpen === 'true') {
+      if (event.key === 'ArrowRight') moveBookPage(1);
+      if (event.key === 'ArrowLeft') moveBookPage(-1);
+      return;
+    }
+
+    if (event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
+      event.preventDefault();
+      moveScene(1);
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+      event.preventDefault();
+      moveScene(-1);
+    }
+  });
+
+  window.addEventListener('touchstart', (event) => {
+    if (!event.touches?.length) return;
+    state.touchActive = true;
+    state.touchStartY = event.touches[0].clientY;
+    state.touchStartX = event.touches[0].clientX;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (event) => {
+    if (!state.touchActive) return;
+    state.touchActive = false;
+    const touch = event.changedTouches?.[0];
+    if (!touch) return;
+    const deltaY = touch.clientY - state.touchStartY;
+    const deltaX = touch.clientX - state.touchStartX;
+    if (Math.abs(deltaY) < 40 && Math.abs(deltaX) < 40) return;
+
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      moveScene(deltaY < 0 ? 1 : -1);
+    } else if (document.body.dataset.modalOpen === 'true') {
+      moveBookPage(deltaX < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+
+  window.addEventListener('pointermove', (event) => {
+    const x = (event.clientX / window.innerWidth - 0.5) * 2;
+    const y = (event.clientY / window.innerHeight - 0.5) * 2;
+    state.pointerX = clamp(x, -1, 1);
+    state.pointerY = clamp(y, -1, 1);
+    document.documentElement.style.setProperty('--tilt-x', `${state.pointerX * 4}deg`);
+    document.documentElement.style.setProperty('--tilt-y', `${-state.pointerY * 3}deg`);
+  }, { passive: true });
 };
 
 const init = () => {
-  renderDownloads();
-  initTimeline();
-  initScrollObserver();
-  setActiveScene('opening');
+  renderShelf();
+  initControls();
+  applyScene(0, { immediate: true });
 };
 
 init();

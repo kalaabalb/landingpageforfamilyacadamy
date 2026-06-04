@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Family Academy - cinematic learning platform for students, parents, teachers, and TV devices." />
-  <meta name="theme-color" content="#09111f" />
+  <meta name="description" content="Family Academy - a cinematic learning room for students, parents, teachers, and TV devices." />
+  <meta name="theme-color" content="#0e1624" />
   <meta name="robots" content="index,follow" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Family Academy" />
-  <meta property="og:description" content="Cinematic learning platform for students, parents, teachers, and TV devices." />
+  <meta property="og:description" content="An immersive student room that introduces the Family Academy platform and its downloads." />
   <meta property="og:image" content="./og-preview.svg" />
   <meta property="og:url" content="/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Family Academy" />
-  <meta name="twitter:description" content="Cinematic learning platform for students, parents, teachers, and TV devices." />
+  <meta name="twitter:description" content="An immersive student room that introduces the Family Academy platform and its downloads." />
   <title>Family Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,172 +21,166 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="orbs orb-one"></div>
-  <div class="orbs orb-two"></div>
-  <div class="orbs orb-three"></div>
+  <div class="ambience ambience-a"></div>
+  <div class="ambience ambience-b"></div>
+  <div class="ambience ambience-c"></div>
+  <div class="grain"></div>
 
-  <main class="shell">
-    <section class="opening scene" data-scene="opening">
-      <div class="opening-copy">
-        <p class="eyebrow reveal">A cinematic learning platform</p>
-        <h1 class="title reveal delay-1">
-          Family Academy
-        </h1>
-        <p class="lede reveal delay-2">
-          The story begins in the classroom, travels through notes, quizzes, and progress,
-          then continues in the living room on TV. This is the front door to the platform,
-          not a generic admin page.
-        </p>
-
-        <div class="hero-actions reveal delay-3">
-          <a class="button primary" href="#story">Enter the story</a>
-          <a class="button secondary" href="#downloads">Go to downloads</a>
+  <main class="experience">
+    <section class="room-shell" aria-label="Family Academy cinematic room">
+      <header class="hud">
+        <div class="brand-lockup">
+          <p class="eyebrow">Family Academy</p>
+          <h1>Family Academy</h1>
+          <p class="brand-tagline">
+            A cinematic learning room for students, parents, teachers, and TV devices.
+          </p>
         </div>
 
-        <div class="role-strip reveal delay-4">
-          <span>Student client</span>
-          <span>TV experience</span>
-          <span>Teacher workflow</span>
-          <span>Parent continuity</span>
+        <div class="hud-meta" aria-live="polite">
+          <span id="scene-progress">01 / 06</span>
+          <span id="scene-name">Arrival</span>
         </div>
-      </div>
+      </header>
 
-      <div class="opening-stage" aria-hidden="true">
-        <div class="stage-card">
-          <div class="stage-topline">
-            <span class="stage-chip">Opening credits</span>
-            <span class="stage-progress">01 / 05</span>
-          </div>
-          <div class="stage-screen">
-            <div class="screen-rim"></div>
-            <div class="screen-glow"></div>
-            <div class="screen-title">
-              <span class="screen-title-small">Family Academy</span>
-              <span class="screen-title-large">Learning in motion.</span>
+      <div class="room-stage" id="room-stage">
+        <div class="room-camera" id="room-camera">
+          <div class="room-set" aria-hidden="true">
+            <div class="plane back-wall"></div>
+            <div class="plane left-wall"></div>
+            <div class="plane right-wall"></div>
+            <div class="plane ceiling"></div>
+            <div class="plane floor"></div>
+            <div class="window window-left"></div>
+            <div class="window window-right"></div>
+
+            <div class="light light-desk"></div>
+            <div class="light light-shelf"></div>
+            <div class="light light-tv"></div>
+
+            <div class="room-student">
+              <div class="student-shadow"></div>
+              <div class="student-body"></div>
+              <div class="student-head"></div>
+              <div class="student-book"></div>
+            </div>
+
+            <div class="desk-zone">
+              <div class="desk-shadow"></div>
+              <div class="desk-surface"></div>
+              <div class="desk-drawer"></div>
+              <div class="desk-lamp"></div>
+              <div class="desk-laptop">
+                <div class="laptop-screen"></div>
+                <div class="laptop-base"></div>
+              </div>
+              <div class="desk-phone"></div>
+              <div class="desk-notes"></div>
+              <div class="desk-mug"></div>
+            </div>
+
+            <div class="bed-zone">
+              <div class="bed-frame"></div>
+              <div class="bed-mattress"></div>
+              <div class="bed-pillow"></div>
+              <div class="bed-blanket"></div>
+            </div>
+
+            <div class="poster poster-a">
+              <span>Learn with motion</span>
+            </div>
+            <div class="poster poster-b">
+              <span>Read. Practice. Repeat.</span>
+            </div>
+            <div class="poster poster-c">
+              <span>Family support matters.</span>
+            </div>
+
+            <div class="tv-station">
+              <div class="tv-stand"></div>
+              <div class="tv-screen">
+                <div class="tv-screen-glow"></div>
+                <div class="tv-screen-label">TV companion</div>
+                <div class="tv-screen-copy">Remote-first. Big-screen. Paired devices.</div>
+              </div>
+              <div class="remote"></div>
+            </div>
+
+            <div class="shelf-wall">
+              <div class="shelf-title">
+                <span>Library wall</span>
+                <small>Each book opens into a guide.</small>
+              </div>
+              <div id="book-shelf" class="book-shelf" aria-label="Family Academy book shelf"></div>
+            </div>
+
+            <div class="quote-strip">
+              <div class="quote-card">
+                <p>“Read first. Watch second. Practice until it sticks.”</p>
+              </div>
+              <div class="quote-card">
+                <p>“A good learning platform feels calm, clear, and reusable.”</p>
+              </div>
+            </div>
+
+            <div class="room-hotspots" aria-label="Room hotspots">
+              <button class="hotspot" data-scene-jump="desk" aria-label="Move to the desk">Desk</button>
+              <button class="hotspot" data-scene-jump="shelf" aria-label="Move to the shelf">Shelf</button>
+              <button class="hotspot" data-scene-jump="tv" aria-label="Move to the TV">TV</button>
+              <button class="hotspot" data-open-book="downloads" aria-label="Open downloads book">Downloads</button>
+              <button class="hotspot" data-scene-jump="support" aria-label="Move to the support wall">Support</button>
             </div>
           </div>
-          <div class="stage-caption">
-            Scroll to move through the story. The frame changes as the journey changes.
+        </div>
+
+        <aside class="narrative-panel" aria-live="polite">
+          <p class="eyebrow" id="scene-kicker">Opening frame</p>
+          <h2 id="scene-title">Family Academy opens like a story, not a form.</h2>
+          <p id="scene-copy">
+            The visitor steps into a warm student room. The desk, shelf, posters, and screen all hint at what the platform does before a single button is pressed.
+          </p>
+
+          <ul id="scene-bullets" class="scene-bullets"></ul>
+
+          <div class="scene-actions">
+            <button class="button ghost" type="button" data-step="prev">Back</button>
+            <button class="button primary" type="button" data-step="next">Move forward</button>
+            <button class="button ghost" type="button" data-open-book="downloads">Open downloads</button>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="story-shell" id="story">
-      <div class="story-sidebar">
-        <div class="sidebar-card">
-          <p class="eyebrow">The sequence</p>
-          <h2>Scroll through the chapters.</h2>
-          <p>
-            The visuals and copy are designed like a film sequence. Each chapter changes the
-            atmosphere, the color, and the message instead of just stacking another block of text.
+          <p class="movement-hint">
+            Use the wheel, arrow keys, or swipe to move through the room. Click a book to open it.
           </p>
-
-          <div class="timeline">
-            <button class="timeline-dot active" data-jump="classroom" aria-label="Jump to classroom"></button>
-            <button class="timeline-dot" data-jump="study" aria-label="Jump to study"></button>
-            <button class="timeline-dot" data-jump="tv" aria-label="Jump to TV"></button>
-            <button class="timeline-dot" data-jump="governance" aria-label="Jump to governance"></button>
-            <button class="timeline-dot" data-jump="downloads" aria-label="Jump to downloads"></button>
-          </div>
-        </div>
+        </aside>
       </div>
 
-      <div class="story-rail">
-        <article class="chapter scene" id="classroom" data-scene="classroom">
-          <p class="chapter-index">Scene 01</p>
-          <h3>From school structure to a study story.</h3>
-          <p>
-            The platform is built around schools, categories, courses, chapters, and learning
-            content. The landing page should feel like the opening shot of a serious product:
-            clear, polished, and clearly educational.
-          </p>
-          <ul>
-            <li>Structured content hierarchy</li>
-            <li>Course and chapter navigation</li>
-            <li>Notes, questions, and exams</li>
-          </ul>
-        </article>
-
-        <article class="chapter scene" id="study" data-scene="study">
-          <p class="chapter-index">Scene 02</p>
-          <h3>The lesson expands when the student enters a chapter.</h3>
-          <p>
-            Video, notes, practice questions, and exams do not sit as separate modules here.
-            They feel like one flow: watch, read, answer, remember, and continue.
-          </p>
-          <ul>
-            <li>Video playback with progress continuity</li>
-            <li>Rich notes and offline comfort</li>
-            <li>Timed exams and results</li>
-          </ul>
-        </article>
-
-        <article class="chapter scene" id="tv" data-scene="tv">
-          <p class="chapter-index">Scene 03</p>
-          <h3>The lesson can continue on TV without losing its place.</h3>
-          <p>
-            The TV app is the living-room branch of the same system. It should feel like a
-            continuation of the lesson, not a separate product.
-          </p>
-          <ul>
-            <li>Pairing and remote-first control</li>
-            <li>Large-screen viewing flow</li>
-            <li>Simple navigation for TV devices</li>
-          </ul>
-        </article>
-
-        <article class="chapter scene" id="governance" data-scene="governance">
-          <p class="chapter-index">Scene 04</p>
-          <h3>The admin layer keeps the system governed.</h3>
-          <p>
-            Teachers, admins, and operators need clarity, not clutter. The product needs to
-            communicate trust, control, and operational calm.
-          </p>
-          <ul>
-            <li>Role-based access and dashboards</li>
-            <li>Payments, subscriptions, and review flow</li>
-            <li>Support, logs, and moderation</li>
-          </ul>
-        </article>
-
-        <article class="chapter scene downloads-scene" id="downloads" data-scene="downloads">
-          <p class="chapter-index">Scene 05</p>
-          <h3>Now the visitor can leave with the right app.</h3>
-          <p>
-            This section is the download gate. It is wired to a single config file, so you can
-            attach Render URLs, Cloudinary URLs, or any other hosted asset links without editing
-            the layout itself.
-          </p>
-          <div id="download-note" class="download-note"></div>
-          <div id="download-grid" class="download-grid"></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="closing scene" data-scene="closing">
-      <div class="closing-grid">
-        <div>
-          <p class="eyebrow">Launch frame</p>
-          <h2>Not an admin page. A public doorway.</h2>
-          <p>
-            This repo is now dedicated to the landing page only. The admin application stays
-            separate, and the download links can be pointed at your own storage once you give the
-            final hosted URLs.
-          </p>
-        </div>
-        <div class="closing-card">
-          <p>Next things to attach:</p>
-          <ul>
-            <li>Public download URLs</li>
-            <li>Privacy policy and terms</li>
-            <li>Support contact</li>
-          </ul>
-        </div>
-      </div>
+      <nav class="compass" aria-label="Room chapters">
+        <button class="compass-chip active" type="button" data-scene-jump="arrival">Arrival</button>
+        <button class="compass-chip" type="button" data-scene-jump="desk">Desk</button>
+        <button class="compass-chip" type="button" data-scene-jump="shelf">Shelf</button>
+        <button class="compass-chip" type="button" data-scene-jump="tv">TV</button>
+        <button class="compass-chip" type="button" data-scene-jump="downloads">Downloads</button>
+        <button class="compass-chip" type="button" data-scene-jump="support">Support</button>
+      </nav>
     </section>
   </main>
+
+  <div class="book-modal" id="book-modal" aria-hidden="true">
+    <div class="book-modal-backdrop" data-close-modal></div>
+    <section class="book-modal-shell" role="dialog" aria-modal="true" aria-labelledby="book-title">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close book">Close</button>
+      <div class="book-modal-cover">
+        <p class="book-modal-kicker" id="book-category">Library guide</p>
+        <h3 id="book-title">Title</h3>
+        <p id="book-summary">Summary</p>
+      </div>
+      <div class="book-modal-pages" id="book-pages"></div>
+      <div class="book-modal-rail">
+        <button class="button ghost" type="button" data-page-nav="prev">Previous page</button>
+        <button class="button primary" type="button" data-page-nav="next">Next page</button>
+      </div>
+    </section>
+  </div>
 
   <script src="./config.js"></script>
   <script src="./script.js" defer></script>
