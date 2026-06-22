@@ -8,12 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
-#canvas{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair;}
+html,body{width:100%;height:100%;overflow:hidden;background:
+  radial-gradient(circle at 50% 22%,rgba(201,150,70,.20),transparent 30%),
+  linear-gradient(180deg,#201107 0%,#120a04 42%,#090502 100%);}
+#canvas{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair;background:transparent;}
 
 /* VIGNETTE */
 #vig{position:fixed;inset:0;pointer-events:none;z-index:10;
   background:radial-gradient(ellipse at 50% 48%,transparent 45%,rgba(3,1,0,.78) 100%);}
+body.tv-safe #vig{
+  background:radial-gradient(ellipse at 50% 48%,transparent 58%,rgba(3,1,0,.42) 100%);
+}
 
 /* LOADER */
 #loader{position:fixed;inset:0;z-index:9000;
@@ -215,6 +220,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
   font-size:1.6rem;margin-bottom:10px;font-weight:400;}
 #webgl-fallback p{line-height:1.7;font-size:.95rem;}
 
+/* TV START PANEL */
+#tv-welcome{
+  position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  pointer-events:none;padding:28px;
+}
+body.tv-safe #tv-welcome{display:flex;}
+#tv-welcome .tv-card{
+  width:min(760px,92vw);background:linear-gradient(160deg,rgba(26,14,6,.92),rgba(10,6,2,.84));
+  border:1px solid rgba(240,192,96,.24);border-radius:24px;padding:34px 36px 30px;
+  box-shadow:0 34px 90px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,220,160,.08);
+  pointer-events:auto;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+#tv-welcome .tv-tag{font-family:'Lato',sans-serif;font-weight:300;font-size:.64rem;letter-spacing:.42em;text-transform:uppercase;color:#d5a25a;margin-bottom:10px;}
+#tv-welcome h2{font-family:'Playfair Display',Georgia,serif;color:#f3c56e;font-size:2rem;line-height:1.1;margin-bottom:10px;}
+#tv-welcome p{font-family:'Lato',sans-serif;font-weight:300;color:#d8bf96;line-height:1.8;font-size:.95rem;max-width:64ch;}
+#tv-welcome .tv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px;}
+#tv-welcome .tv-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;
+  border-radius:14px;border:1px solid rgba(240,192,96,.18);background:rgba(240,192,96,.07);
+  color:#f0d7a4;text-decoration:none;font-family:'Lato',sans-serif;font-size:.84rem;letter-spacing:.08em;
+}
+#tv-welcome .tv-btn strong{font-family:'Playfair Display',Georgia,serif;font-size:1rem;color:#f3c56e;}
+#tv-welcome .tv-btn:hover,#tv-welcome .tv-btn:focus-visible,#tv-welcome .tv-btn.selected{outline:none;border-color:rgba(240,192,96,.38);background:rgba(240,192,96,.15);}
+#tv-welcome .tv-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap;}
+#tv-welcome .tv-close{border:none;background:rgba(0,0,0,.35);color:#d7b27c;border:1px solid rgba(240,192,96,.16);padding:10px 14px;border-radius:999px;cursor:pointer;font-family:'Lato',sans-serif;letter-spacing:.12em;text-transform:uppercase;}
+#tv-welcome .tv-close:hover,#tv-welcome .tv-close:focus-visible,#tv-welcome .tv-close.selected{outline:none;background:rgba(240,192,96,.12);border-color:rgba(240,192,96,.34);color:#f7d58f;}
+#tv-welcome .tv-help{font-family:'Lato',sans-serif;font-size:.72rem;color:#a9875b;letter-spacing:.22em;text-transform:uppercase;}
+
 @media(max-width:540px){.ocard{padding:28px 22px;}.otitle{font-size:1.28rem;}.dlgrid{grid-template-columns:1fr;}.book-view{flex-direction:column;max-height:92vh;}.book-left{width:100%;}.book-spine-side{display:none;}.drawer-overlay{padding:22px 18px;}}
 @media(max-width:820px){#focus-dock{right:10px;gap:6px}.focus-btn{width:38px;height:38px;font-size:.58rem;}}
 </style>
@@ -240,6 +273,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
 </div>
 
 <canvas id="canvas"></canvas>
+
+<div id="tv-welcome" aria-label="TV start panel">
+  <div class="tv-card">
+    <div class="tv-tag">Family Academy TV start</div>
+    <h2>Open the room, then use the remote to move through it.</h2>
+    <p>This TV view is built for remote control. Use the arrows to move between the desk, shelf, TV corner, and files cabinet. Select opens the chosen area. The download buttons below take you straight to the GitHub release builds.</p>
+    <div class="tv-grid">
+      <a class="tv-btn" href="https://github.com/kalaabalb/family-academy-client/releases/tag/v2026.06.09-client" target="_blank" rel="noopener"><strong>Client builds</strong><span>Windows, macOS, Linux, Android</span></a>
+      <a class="tv-btn" href="https://github.com/kalaabalb/family-academy-client-tv/releases/tag/v2026.06.09-tv" target="_blank" rel="noopener"><strong>TV builds</strong><span>Android TV, Linux, macOS</span></a>
+      <a class="tv-btn" href="#downloads" data-focus-jump="downloads"><strong>Open files cabinet</strong><span>In-room download shelf</span></a>
+      <a class="tv-btn" href="#shelf" data-focus-jump="shelf"><strong>Open books</strong><span>Study guides and help</span></a>
+    </div>
+    <div class="tv-actions">
+      <div class="tv-help">Arrows · Select · Back</div>
+      <button class="tv-close" type="button" id="tv-close">Enter the room</button>
+    </div>
+  </div>
+</div>
 
 <div id="toplogo"><span class="fa">FA</span><div class="sep"></div><span>Family Academy</span></div>
 <div id="zone"></div>
@@ -394,6 +445,8 @@ const BOOKS=[
 
 // ── RENDERER ──────────────────────────────────────────────────────
 const canvas=document.getElementById('canvas');
+const TV_SAFE_MODE=window.innerWidth>=1400&&window.innerHeight>=700&&!window.matchMedia('(hover:hover)').matches;
+if(TV_SAFE_MODE)document.body.classList.add('tv-safe');
 function showWebGLFallback(error){
   window.FA_BOOT_ERROR=true;
   const msg=document.getElementById('ld-msg');
@@ -405,7 +458,7 @@ function showWebGLFallback(error){
 }
 let renderer;
 try{
-  renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance',alpha:true});
 }catch(error){
   showWebGLFallback(error);
   throw error;
@@ -415,12 +468,12 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.06;
+renderer.toneMappingExposure=TV_SAFE_MODE?1.24:1.06;
 renderer.outputEncoding=THREE.sRGBEncoding;
 
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x0f0700);
-scene.fog=new THREE.FogExp2(0x0e0600,.021);
+scene.background=new THREE.Color(TV_SAFE_MODE?0x231308:0x0f0700);
+scene.fog=new THREE.FogExp2(TV_SAFE_MODE?0x2a170c:0x0e0600,TV_SAFE_MODE?0.012:0.021);
 
 const camera=new THREE.PerspectiveCamera(52,window.innerWidth/window.innerHeight,.04,55);
 camera.position.set(0,1.58,3.35);
@@ -641,16 +694,16 @@ add(place(sph(.055,8,bulbM),-1.2,RH-.54,-2.4));
 add(place(box(2.8,.01,3.0,new THREE.MeshStandardMaterial({color:0xffebc0,emissive:0xffdf90,emissiveIntensity:.5,roughness:.6})),0,RH-.01,-5));
 
 // ── LIGHTS ────────────────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x503820,.5));
-scene.add(new THREE.HemisphereLight(0xffe0b0,0x2a1808,.22));
-const mainPt=new THREE.PointLight(0xffe8b0,2.2,20);mainPt.position.set(0,RH-.45,0);
+scene.add(new THREE.AmbientLight(TV_SAFE_MODE?0x7a5532:0x503820,TV_SAFE_MODE?0.75:0.5));
+scene.add(new THREE.HemisphereLight(0xffe0b0,TV_SAFE_MODE?0x5a3518:0x2a1808,TV_SAFE_MODE?0.42:0.22));
+const mainPt=new THREE.PointLight(0xffe8b0,TV_SAFE_MODE?3.0:2.2,24);mainPt.position.set(0,RH-.45,0);
 mainPt.castShadow=true;mainPt.shadow.mapSize.setScalar(1024);mainPt.shadow.radius=12;scene.add(mainPt);
-const deskPt=new THREE.PointLight(0xffd060,1.9,5.8);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
-const deskPend=new THREE.PointLight(0xffc840,.88,4.5);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
-const bedPt=new THREE.PointLight(0xffa840,.95,4.2);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
-const tvPt=new THREE.PointLight(0x5088dd,.75,5.5);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
-const winDir=new THREE.DirectionalLight(0xfff2d0,.65);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
-const dlPt=new THREE.PointLight(0xffcc00,0,3.5);dlPt.position.set(1.2,1.6,-6.6);scene.add(dlPt);
+const deskPt=new THREE.PointLight(0xffd060,TV_SAFE_MODE?2.6:1.9,7.2);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
+const deskPend=new THREE.PointLight(0xffc840,TV_SAFE_MODE?1.2:.88,5.0);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
+const bedPt=new THREE.PointLight(0xffa840,TV_SAFE_MODE?1.2:.95,5.0);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
+const tvPt=new THREE.PointLight(0x5088dd,TV_SAFE_MODE?1.15:.75,7.0);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
+const winDir=new THREE.DirectionalLight(0xfff2d0,TV_SAFE_MODE?0.85:0.65);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
+const dlPt=new THREE.PointLight(0xffcc00,TV_SAFE_MODE?0.8:0,4.5);dlPt.position.set(1.2,1.6,-6.6);scene.add(dlPt);
 
 // ── WINDOW ────────────────────────────────────────────────────────
 const wfM=new THREE.MeshStandardMaterial({color:0xd6c69e,roughness:.82});
@@ -1439,8 +1492,17 @@ function closeOverlay(){overlay.classList.remove('open');overlayMode='none';}
 overlay.addEventListener('click',e=>{if(e.target===overlay)closeOverlay();});
 document.addEventListener('keydown',e=>{
   const overlayOpen=overlay.classList.contains('open');
+  const tvOpen=tvWelcome&&getComputedStyle(tvWelcome).display!=='none';
   const remoteKeys=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter','NumpadEnter','Space','Escape','Backspace','BrowserBack'];
   if(remoteKeys.includes(e.code))e.preventDefault();
+  if(tvOpen){
+    if(e.code==='Escape'||e.code==='Backspace'||e.code==='BrowserBack'){dismissTvWelcome();return;}
+    if(e.code==='ArrowLeft'){setTvWelcomeIndex(tvWelcomeIndex-1);return;}
+    if(e.code==='ArrowRight'){setTvWelcomeIndex(tvWelcomeIndex+1);return;}
+    if(e.code==='ArrowUp'){setTvWelcomeIndex(tvWelcomeIndex-2);return;}
+    if(e.code==='ArrowDown'){setTvWelcomeIndex(tvWelcomeIndex+2);return;}
+    if(e.code==='Enter'||e.code==='NumpadEnter'||e.code==='Space'){activateTvWelcomeCurrent();return;}
+  }
   if(overlayOpen){
     if(e.code==='Escape'||e.code==='Backspace'||e.code==='BrowserBack'){closeOverlay();return;}
     if(e.code==='ArrowUp'||e.code==='PageUp'){
@@ -1482,6 +1544,40 @@ overlay.addEventListener('wheel',e=>{
   pane.scrollTop+=e.deltaY;
   e.preventDefault();
 },{passive:false});
+
+const tvWelcome=document.getElementById('tv-welcome');
+const tvCloseBtn=document.getElementById('tv-close');
+const tvWelcomeButtons=Array.from(document.querySelectorAll('#tv-welcome .tv-btn,#tv-welcome .tv-close'));
+let tvWelcomeIndex=0;
+function setTvWelcomeIndex(index,shouldFocus=true){
+  if(!tvWelcomeButtons.length)return;
+  tvWelcomeIndex=(index+tvWelcomeButtons.length)%tvWelcomeButtons.length;
+  tvWelcomeButtons.forEach((btn,i)=>btn.classList.toggle('selected',i===tvWelcomeIndex));
+  if(shouldFocus&&tvWelcomeButtons[tvWelcomeIndex])tvWelcomeButtons[tvWelcomeIndex].focus({preventScroll:true});
+}
+function activateTvWelcomeCurrent(){
+  const btn=tvWelcomeButtons[tvWelcomeIndex];
+  if(btn)btn.click();
+}
+setTvWelcomeIndex(0,false);
+function dismissTvWelcome(){
+  if(tvWelcome)tvWelcome.style.display='none';
+}
+if(tvCloseBtn){
+  tvCloseBtn.addEventListener('click',()=>{
+    dismissTvWelcome();
+    beginFocus('desk');
+  });
+}
+document.querySelectorAll('[data-focus-jump]').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    dismissTvWelcome();
+    const jump=btn.getAttribute('data-focus-jump');
+    if(jump==='downloads') beginFocus('downloads');
+    else if(jump==='shelf') beginFocus('shelf');
+  });
+});
 
 function toggleDrawer(id){
   const d=drawerParts.find(x=>x.userData.id===id);
@@ -1637,7 +1733,7 @@ function render(now){
   animParticles(t);animLights(t);animBooks(t);animDrawers(t);checkZone();
   // Dynamic fog — denser when camera moves fast
   const movSpeed=cPos.distanceTo(tPos);
-  scene.fog.density=.021+movSpeed*.004;
+  scene.fog.density=(TV_SAFE_MODE?0.012:0.021)+movSpeed*(TV_SAFE_MODE?0.002:0.004);
   renderer.render(scene,camera);
 }
 
