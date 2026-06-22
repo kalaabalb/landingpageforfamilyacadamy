@@ -201,8 +201,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
   background:rgba(5,2,0,.72);color:#c09040;font-family:'Lato',sans-serif;font-size:.64rem;
   letter-spacing:.04em;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   transition:transform .18s,background .18s,color .18s,border-color .18s;}
-.focus-btn:hover,.focus-btn:focus-visible{transform:translateX(-3px);background:rgba(200,150,50,.14);
+.focus-btn:hover,.focus-btn:focus-visible,.focus-btn.selected{transform:translateX(-3px);background:rgba(200,150,50,.14);
   color:#f0c060;border-color:rgba(200,150,50,.44);outline:none;}
+.focus-btn.selected{box-shadow:0 0 0 1px rgba(240,192,96,.2),0 0 18px rgba(240,192,96,.18);}
 
 #webgl-fallback{position:fixed;inset:0;z-index:120;background:#120900;color:#d0a050;
   display:none;align-items:center;justify-content:center;padding:24px;text-align:center;
@@ -251,6 +252,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
   <span class="hk">Drag</span><span>Look</span>
   <div class="hdot"></div>
   <span class="hk">Scroll</span><span>Walk</span>
+  <div class="hdot"></div>
+  <span class="hk">Remote</span><span>Arrows + Select</span>
   <div class="hdot"></div>
   <span class="hk">Click</span><span>Explore</span>
   <div class="hdot"></div>
@@ -1307,6 +1310,19 @@ canvas.addEventListener('wheel',e=>{
   tPos.z=Math.max(BOUNDS.zMin,Math.min(BOUNDS.zMax,tPos.z));
   tPos.y=1.62;
 },{passive:true});
+const focusButtons=Array.from(document.querySelectorAll('#focus-dock .focus-btn'));
+let focusDockIndex=0;
+function setFocusDockIndex(index,shouldFocus=true){
+  if(!focusButtons.length)return;
+  focusDockIndex=(index+focusButtons.length)%focusButtons.length;
+  focusButtons.forEach((btn,i)=>btn.classList.toggle('selected',i===focusDockIndex));
+  if(shouldFocus)focusButtons[focusDockIndex].focus({preventScroll:true});
+}
+function activateFocusDockCurrent(){
+  const btn=focusButtons[focusDockIndex];
+  if(btn)beginFocus(btn.dataset.focus);
+}
+setFocusDockIndex(0,false);
 function doMove(){
   const dir=new THREE.Vector3(Math.sin(cYaw),0,Math.cos(cYaw));
   const right=new THREE.Vector3(Math.cos(cYaw),0,-Math.sin(cYaw));
@@ -1362,8 +1378,14 @@ canvas.addEventListener('touchend',e=>{
 
 // ── OVERLAY ───────────────────────────────────────────────────────
 const overlay=document.getElementById('overlay');
+let overlayMode='none';
+function focusOverlayPrimary(){
+  const primary=overlay.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
+  if(primary&&typeof primary.focus==='function')primary.focus({preventScroll:true});
+}
 function openBook(id){
   const bk=BOOKS.find(b=>b.id===id);if(!bk)return;
+  overlayMode='book';
   const css=hrgb(bk.col),css2=shadeHex(bk.col,.58);
   overlay.innerHTML=
     '<div class="book-view" style="--bsc:'+css+';--bsc2:'+css2+'">'+
@@ -1383,14 +1405,16 @@ function openBook(id){
         '<div class="bbody">'+bk.body+'</div>'+
         '<div class="book-page-num">Family Academy &mdash; '+bk.spine+'</div>'+
       '</div>'+
-    '</div>';
+  '</div>';
   overlay.classList.add('open');
   document.getElementById('ocls').addEventListener('click',closeOverlay);
+  setTimeout(focusOverlayPrimary,0);
 }
 function openDownloads(scope='all'){
   const dl=window.FA_DOWNLOADS;
   const title=scope==='client'?'Client Apps':scope==='tv'?'TV Apps':'Downloads';
   const sub=scope==='client'?'Desktop & mobile installers':scope==='tv'?'Big screen installs':'Install Family Academy';
+  overlayMode='downloads';
   let h='<div class="drawer-overlay"><button class="ocls" id="ocls" type="button">&#x2715;</button><div class="dov-tag">Downloads \u00b7 '+title+'</div><div class="dov-title">'+title+'</div><div class="dov-sub">'+sub+'</div>';
   if(scope!=='tv'){
     h+='<div class="dlsec">Student & Mobile Apps</div><div class="dlgrid">';
@@ -1409,10 +1433,49 @@ function openDownloads(scope='all'){
   overlay.innerHTML=h;
   overlay.classList.add('open');
   document.getElementById('ocls').addEventListener('click',closeOverlay);
+  setTimeout(focusOverlayPrimary,0);
 }
-function closeOverlay(){overlay.classList.remove('open');}
+function closeOverlay(){overlay.classList.remove('open');overlayMode='none';}
 overlay.addEventListener('click',e=>{if(e.target===overlay)closeOverlay();});
-document.addEventListener('keydown',e=>{if(e.code==='Escape')closeOverlay();});
+document.addEventListener('keydown',e=>{
+  const overlayOpen=overlay.classList.contains('open');
+  const remoteKeys=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter','NumpadEnter','Space','Escape','Backspace','BrowserBack'];
+  if(remoteKeys.includes(e.code))e.preventDefault();
+  if(overlayOpen){
+    if(e.code==='Escape'||e.code==='Backspace'||e.code==='BrowserBack'){closeOverlay();return;}
+    if(e.code==='ArrowUp'||e.code==='PageUp'){
+      const pane=overlay.querySelector('.book-right,.drawer-overlay,.ocard');
+      if(pane)pane.scrollTop-=Math.max(180,pane.clientHeight*.6);
+      return;
+    }
+    if(e.code==='ArrowDown'||e.code==='PageDown'||e.code==='Space'){
+      const pane=overlay.querySelector('.book-right,.drawer-overlay,.ocard');
+      if(pane)pane.scrollTop+=Math.max(180,pane.clientHeight*.6);
+      return;
+    }
+    if(e.code==='ArrowLeft'){
+      const prev=overlay.querySelector('[data-page-nav="prev"]');
+      if(prev){prev.click();return;}
+    }
+    if(e.code==='ArrowRight'){
+      const next=overlay.querySelector('[data-page-nav="next"]');
+      if(next){next.click();return;}
+    }
+    if(e.code==='Enter'||e.code==='NumpadEnter'){
+      const active=document.activeElement;
+      if(active&&overlay.contains(active)&&typeof active.click==='function'){active.click();}
+      return;
+    }
+    return;
+  }
+  if(e.code==='Escape'||e.code==='Backspace'||e.code==='BrowserBack'){
+    closeOverlay();
+    return;
+  }
+  if(e.code==='ArrowLeft'){setFocusDockIndex(focusDockIndex-1);return;}
+  if(e.code==='ArrowRight'){setFocusDockIndex(focusDockIndex+1);return;}
+  if(e.code==='Enter'||e.code==='NumpadEnter'||e.code==='Space'){activateFocusDockCurrent();}
+});
 overlay.addEventListener('wheel',e=>{
   const pane=e.target.closest('.book-right,.drawer-overlay,.ocard');
   if(!pane)return;
