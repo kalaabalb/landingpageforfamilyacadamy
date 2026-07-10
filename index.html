@@ -383,6 +383,7 @@ function reDraw(tex,drawFn){
   const c=document.createElement('canvas');c.width=tex.image.width;c.height=tex.image.height;
   drawFn(c.getContext('2d'),c.width,c.height);tex.image=c;tex.needsUpdate=true;
 }
+const allHotspots=[];
 const lapTex=makeTex(512,320,drawLapTex);
 const tvTex =makeTex(640,360,drawTvTex);
 const phTex =makeTex(128,256,drawPhTex);
@@ -820,7 +821,6 @@ SHELF_YS.forEach(y=>{
 });
 SHELF_YS.forEach(y=>{shelfGroup.add(place(box(1.95,.008,.008,new THREE.MeshStandardMaterial({color:0xffe8a0,emissive:0xffda80,emissiveIntensity:1.1,roughness:.4})),1.0,y+.012,.16));});
 
-const allHotspots=[];
 const allBookMeshes=[];
 const ROW_SECTIONS=[
   {y:SHELF_YS[0],label:'Getting Started',books:BOOKS.slice(0,5)},
