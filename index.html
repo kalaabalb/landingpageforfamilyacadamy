@@ -1139,15 +1139,49 @@ function openBook(id){
 // ====================================================
 function openDrawer(idx){
   const dl=window.FA_DOWNLOADS;
+  const client=dl.client||{};
+  const tv=dl.tv||{};
   const cats=[
-    {title:'Client Apps',sub:'Desktop & Mobile Installers',tag:'Downloads \u00b7 Client',sections:[{label:'Desktop & Laptop',items:Object.values(dl.client).slice(0,4)},{label:'Android & Mobile',items:Object.values(dl.client).slice(4)}]},
-    {title:'TV Apps',sub:'Big Screen & Smart TV',tag:'Downloads \u00b7 TV',sections:[{label:'Android TV & Streaming',items:Object.values(dl.tv)}]},
-    {title:'Guides & Support',sub:'Setup Docs & Help',tag:'Downloads \u00b7 Guides',sections:[{label:'Quick Setup',items:[{label:'Getting Started Guide',icon:'📋',url:'#'},{label:'Device Pairing Tutorial',icon:'📱',url:'#'},{label:'Parent Link Guide',icon:'👨\u200D👩\u200D👦',url:'#'},{label:'TV Setup Guide',icon:'📺',url:'#'}]}]}
+    {title:'Client Apps',sub:'Desktop, laptop, and mobile installers',tag:'Downloads \u00b7 Client',sections:[
+      {label:'Desktop & Laptop',items:[client.windows_installer,client.windows_zip,client.macos_zip,client.linux_tar]},
+      {label:'Android & Mobile',items:[client.android_apk,client.play_store_aab]}
+    ]},
+    {title:'TV Apps',sub:'Big screen and smart TV builds',tag:'Downloads \u00b7 TV',sections:[
+      {label:'Android TV Packages',items:[tv.android_tv_apk,tv.tv_aab,tv.tv_linux,tv.tv_macos]}
+    ]},
+    {title:'Guides & Support',sub:'Setup docs and help guides',tag:'Downloads \u00b7 Guides',sections:[
+      {label:'Quick Setup',items:[
+        {label:'Getting Started Guide',icon:'📋',url:'#',action:'book',bookId:'register'},
+        {label:'Device Pairing Tutorial',icon:'📱',url:'#',action:'book',bookId:'devices'},
+        {label:'Parent Link Guide',icon:'👨\u200D👩\u200D👦',url:'#',action:'book',bookId:'parents'},
+        {label:'TV Setup Guide',icon:'📺',url:'#',action:'book',bookId:'tv'}
+      ]}
+    ]}
   ][idx];
   let h='<div class="drawer-overlay"><button class="ocls" id="ocls">&#x2715;</button><div class="dov-tag">'+cats.tag+'</div><div class="dov-title">'+cats.title+'</div><div class="dov-sub">'+cats.sub+'</div>';
-  cats.sections.forEach(s=>{h+='<div class="dlsec">'+s.label+'</div><div class="dlgrid">';s.items.forEach(d=>{h+='<a href="'+d.url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+d.icon+'</span>'+d.label+'</a>';});h+='</div>';});
+  cats.sections.forEach(s=>{
+    h+='<div class="dlsec">'+s.label+'</div><div class="dlgrid">';
+    s.items.filter(Boolean).forEach(d=>{
+      const url=d.url||'#';
+      const icon=d.icon||'⬇';
+      const label=d.label||'Open';
+      if(d.action==='book' && d.bookId){
+        h+='<button type="button" class="dlbtn" data-guide-book="'+d.bookId+'"><span class="dlicon">'+icon+'</span>'+label+'</button>';
+      } else {
+        h+='<a href="'+url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+icon+'</span>'+label+'</a>';
+      }
+    });
+    h+='</div>';
+  });
   h+='</div>';overlay.innerHTML=h;overlay.classList.add('open');
   document.getElementById('ocls').addEventListener('click',closeOverlay);
+  overlay.querySelectorAll('[data-guide-book]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const bookId=btn.getAttribute('data-guide-book');
+      closeOverlay();
+      if(bookId)openBook(bookId);
+    });
+  });
   // Animate drawer physically
   drawerOpen[idx]=!drawerOpen[idx];
 }
