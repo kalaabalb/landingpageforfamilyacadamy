@@ -1,8 +1,14 @@
 # Family Academy Landing Page
 
-This repository is the public landing page for Family Academy.
+Public cinematic landing page for Family Academy.
 
-## Local preview
+## Role
+
+- Brand and product presentation
+- Public download hub for the client and TV builds
+- SEO-friendly entry point for search engines and social previews
+
+## Development
 
 ```bash
 npm start
@@ -10,32 +16,25 @@ npm start
 
 Open `http://localhost:3000`.
 
-## Render
+## Deploy
 
-- Service type: `Static Site`
+- Platform: Render static site
 - Build command: `npm run build`
 - Publish directory: `.`
-- Environment variables: none required for the current static setup
 
 ## Downloads
 
-The landing page is wired to `config.js`.
+Download URLs are defined in `config.js` and point to GitHub Release assets for:
 
-Fill in the `href` values with your public download URLs for:
-
-- client Windows installer
-- client Windows zip
-- client macOS zip
-- client Linux tarball
-- client Android APK pack
-- client Play Store bundle
-- TV Android APK
-- TV Android bundle
-- TV Linux bundle
-- TV macOS zip
+- Windows installer and zip
+- macOS zip
+- Linux tarball
+- Android split APKs and universal APK
+- Android App Bundle
+- TV APKs and desktop bundles
 
 ## Notes
 
-- Keep Cloudinary secrets out of the browser code.
-- Use public delivery URLs or server-side signed links for the actual files.
-- The page is designed as a cinematic room, so wheel, arrow keys, swipe, and clicks all move through the story.
+- Keep browser code free of secrets.
+- Keep the GitHub Release tags aligned with the latest published artifacts.
+- The landing page is intentionally cinematic and keyboard, mouse, touch, and remote friendly.

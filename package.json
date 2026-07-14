@@ -1,5 +1,6 @@
 {
   "name": "landingpageforfamilyacadamy",
+  "description": "Public cinematic landing page and download hub for Family Academy.",
   "private": true,
   "version": "1.0.0",
   "scripts": {
