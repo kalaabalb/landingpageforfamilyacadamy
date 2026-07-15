@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no"/>
 <title>Family Academy \u2014 Your Learning Room</title>
 <meta name="description" content="Family Academy is a cinematic learning room for students, parents, teachers, and TV devices. Download the client, TV, and desktop builds from one public page."/>
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"/>
@@ -131,8 +131,64 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
 #tour-nav.show{opacity:1;pointer-events:all;}
 #tour-nav button{width:42px;height:42px;border-radius:50%;background:rgba(5,2,0,.75);border:1px solid rgba(200,150,50,.24);color:#d0a050;font-size:1rem;cursor:pointer;transition:all .2s;}
 #tour-nav button:hover,#tour-nav button:focus-visible{background:rgba(200,100,20,.22);border-color:rgba(200,150,50,.5);color:#f0c060;outline:none;}
-@media(max-width:640px){#tour-panel{left:12px;right:12px;bottom:88px;max-width:none;}#tour-chips{display:none;}#tour-nav{bottom:88px;right:12px;}}
-@media(max-width:540px){.book-view{flex-direction:column;max-height:92vh;}.book-left{width:100%;}.book-spine-side{display:none;}.dlgrid{grid-template-columns:1fr;}.drawer-overlay{padding:22px 18px;}}
+@media(max-width:760px){
+  #loader{padding:1rem;}
+  .ld-ring{width:64px;height:64px;margin-bottom:22px;}
+  .ld-name{font-size:1.5rem;letter-spacing:.16em;}
+  .ld-tag{font-size:.56rem;letter-spacing:.42em;margin-bottom:30px;}
+  .ld-bar-wrap{width:min(78vw,220px);}
+  .ld-msg{font-size:.58rem;letter-spacing:.2em;margin-top:12px;}
+  #toplogo{top:12px;left:12px;font-size:.68rem;letter-spacing:.18em;}
+  #zone{top:58px;font-size:.62rem;letter-spacing:.2em;max-width:calc(100vw - 24px);text-align:center;line-height:1.2;}
+  #hud{display:none;}
+  #xhair{width:16px;height:16px;}
+  #tip{font-size:.6rem;padding:4px 10px;}
+  #intro .il{font-size:1.6rem !important;line-height:1.15;max-width:calc(100vw - 2rem);}
+  #intro #il2{font-size:.66rem !important;letter-spacing:.34em !important;}
+  #jpad{left:12px;bottom:14px;width:80px;height:80px;}
+  #jbase{width:80px;height:80px;}
+  #jknob{width:28px;height:28px;}
+  #hint-arrow{display:none;}
+  .dev-lbl{display:none;}
+  #tour-panel{
+    left:10px;
+    right:10px;
+    bottom:10px;
+    max-width:none;
+    max-height:38vh;
+    overflow:auto;
+    padding:12px 14px;
+    border-radius:16px;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  .tour-kicker{font-size:.55rem;letter-spacing:.24em;}
+  .tour-title{font-size:1rem;line-height:1.18;}
+  .tour-copy{font-size:.66rem;line-height:1.45;}
+  .tour-bullets{font-size:.62rem;line-height:1.45;margin-bottom:8px;}
+  .tour-progress{font-size:.56rem;letter-spacing:.16em;}
+  #tour-chips{display:none;}
+  #tour-nav{right:10px;bottom:calc(38vh + 18px);}
+  #tour-nav button{width:34px;height:34px;font-size:.9rem;}
+  #overlay{padding:10px;}
+  .book-view{max-width:none;width:100%;max-height:calc(100vh - 20px);}
+  .book-left{width:42vw;padding:22px 18px 18px 16px;}
+  .book-cover-art{font-size:1.8rem;}
+  .book-cover-title{font-size:.72rem;}
+  .book-cover-sub,.book-cover-brand{font-size:.54rem;}
+  .book-right{padding:18px 16px;min-height:0;}
+  .book-right h2{font-size:1.18rem;}
+  .book-right .bsub{font-size:.62rem;margin-bottom:14px;padding-bottom:10px;}
+  .book-right .bbody{font-size:.76rem;line-height:1.6;}
+  .book-page-num{bottom:10px;right:14px;font-size:.54rem;}
+  .ocls{top:10px;right:10px;width:24px;height:24px;font-size:.8rem;}
+  .drawer-overlay{padding:18px 14px;max-height:82vh;}
+  .dov-title{font-size:1.2rem;}
+  .dov-sub{font-size:.6rem;margin-bottom:14px;padding-bottom:10px;}
+  .dlsec{font-size:.56rem;letter-spacing:.24em;margin:16px 0 8px;}
+  .dlbtn{font-size:.68rem;padding:10px 11px;}
+}
+@media(max-width:540px){.book-view{flex-direction:column;max-height:94vh;}.book-left{width:100%;}.book-spine-side{display:none;}.dlgrid{grid-template-columns:1fr;}.drawer-overlay{padding:16px 12px;}}
 </style>
 </head>
 <body>
@@ -227,10 +283,11 @@ const BOOKS=[
 //  RENDERER
 // ====================================================
 const canvas=document.getElementById('canvas');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.8));
+const isCompactViewport=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const renderer=new THREE.WebGLRenderer({canvas,antialias:!isCompactViewport,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,isCompactViewport?1.05:1.8));
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.shadowMap.enabled=true;
+renderer.shadowMap.enabled=!isCompactViewport;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.08;
@@ -239,7 +296,7 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0f0700);
 scene.fog=new THREE.FogExp2(0x0e0600,.021);
 const camera=new THREE.PerspectiveCamera(68,window.innerWidth/window.innerHeight,.04,55);
-camera.position.set(0,1.62,6.5);
+camera.position.set(0,1.62,isCompactViewport?7.1:6.5);
 
 // ====================================================
 //  HELPERS
@@ -1540,7 +1597,7 @@ canvas.addEventListener('touchend',e=>{
 // ====================================================
 //  CINEMATIC INTRO
 // ====================================================
-let introT=0;const INTRO_DUR=5.5;let introActive=true,introPhase=0;
+let introT=0;const INTRO_DUR=isCompactViewport?3.9:5.5;let introActive=true,introPhase=0;
 const il1=document.getElementById('il1'),il2=document.getElementById('il2');
 function eO4(p){return 1-Math.pow(1-p,4);}function eO2(p){return 1-Math.pow(1-p,2);}
 function stepIntro(dt){
@@ -1554,7 +1611,7 @@ function stepIntro(dt){
     introActive=false;tPos.set(0,1.62,6.0);tYaw=Math.PI;tPitch=-.03;
     document.getElementById('hud').classList.add('show');document.getElementById('toplogo').classList.add('show');xhairEl.classList.add('show');
     document.getElementById('tour-panel').classList.add('show');
-    document.getElementById('tour-chips').classList.add('show');
+    if(!isCompactViewport){document.getElementById('tour-chips').classList.add('show');}
     document.getElementById('tour-nav').classList.add('show');
     goToStage(0,{silent:true});
     const hintEl=document.getElementById('hint-arrow');hintEl.classList.add('show');setTimeout(()=>hintEl.classList.remove('show'),9000);
@@ -1565,57 +1622,60 @@ function stepIntro(dt){
 //  ANIMATIONS
 // ====================================================
 function animParticles(t){
+  if(isCompactViewport)return;
   const pos=pGeo.attributes.position.array;
   for(let i=0;i<PCOUNT;i++){pos[i*3]+=pVel[i*3]+Math.sin(t*.18+i*.48)*.0003;pos[i*3+1]+=pVel[i*3+1];pos[i*3+2]+=pVel[i*3+2]+Math.cos(t*.14+i*.38)*.00022;if(pos[i*3+1]>3.4){pos[i*3+1]=.1;pos[i*3]=rnd(-4,4);pos[i*3+2]=rnd(-6.2,6.0);}if(pos[i*3]<-4.2||pos[i*3]>4.2)pVel[i*3]*=-1;}
   pGeo.attributes.position.needsUpdate=true;
 }
 function animLights(t){
-  deskPt.intensity=1.88+Math.sin(t*1.1)*.14;tvPt.intensity=.72+Math.sin(t*.7)*.12;
-  bedPt.intensity=.92+Math.sin(t*1.6)*.08;mainPt.intensity=2.1+Math.sin(t*.4)*.07;
-  deskPend.intensity=.88+Math.sin(t*.95+.8)*.1;dlPt.intensity=.58+Math.sin(t*2.2)*.32;
-  doorPt.intensity=.42+Math.sin(t*.6+1.2)*.1;flPt.intensity=.72+Math.sin(t*1.4+.5)*.1;
-  shelfPt.intensity=1.05+Math.sin(t*.55+.3)*.12;winDir.intensity=.58+Math.sin(t*.22)*.09;
+  const m=isCompactViewport ? 0.72 : 1;
+  deskPt.intensity=(1.88+Math.sin(t*1.1)*.14)*m;tvPt.intensity=(.72+Math.sin(t*.7)*.12)*m;
+  bedPt.intensity=(.92+Math.sin(t*1.6)*.08)*m;mainPt.intensity=(2.1+Math.sin(t*.4)*.07)*m;
+  deskPend.intensity=(.88+Math.sin(t*.95+.8)*.1)*m;dlPt.intensity=(.58+Math.sin(t*2.2)*.32)*m;
+  doorPt.intensity=(.42+Math.sin(t*.6+1.2)*.1)*m;flPt.intensity=(.72+Math.sin(t*1.4+.5)*.1)*m;
+  shelfPt.intensity=(1.05+Math.sin(t*.55+.3)*.12)*m;winDir.intensity=(.58+Math.sin(t*.22)*.09)*m;
   const now=new Date();const hr=now.getHours()%12+now.getMinutes()/60;const mn=now.getMinutes()+now.getSeconds()/60;const sc=now.getSeconds()+now.getMilliseconds()/1000;
   hrHand.rotation.x=-(hr/12)*Math.PI*2;mnHand.rotation.x=-(mn/60)*Math.PI*2;scHand.rotation.x=-(sc/60)*Math.PI*2;
 }
 function animStudent(t){
   if(!SG)return;
   // Subtle breathing: chest very slightly scales on Y, torso has a faint sway
-  const breathe=Math.sin(t*.8)*.004;
+  const breathe=Math.sin(t*.8)*(isCompactViewport ? 0.0025 : 0.004);
   torsoG.children[0].scale.y=1+breathe;
-  torsoG.rotation.x=.1+Math.sin(t*.8)*.006;
+  torsoG.rotation.x=.1+Math.sin(t*.8)*(isCompactViewport ? 0.0035 : 0.006);
   // Head micro-nod (reading)
   if(headG){
-    headG.rotation.x=.32+Math.sin(t*.3)*.018;
-    headG.rotation.z=Math.sin(t*.25)*.012;
+    headG.rotation.x=.32+Math.sin(t*.3)*(isCompactViewport ? 0.01 : 0.018);
+    headG.rotation.z=Math.sin(t*.25)*(isCompactViewport ? 0.008 : 0.012);
   }
   // Open book page settles with a faint flutter, like breath disturbing paper
-  if(pgMesh)pgMesh.rotation.z=Math.sin(t*1.7)*.006;
+  if(pgMesh)pgMesh.rotation.z=Math.sin(t*1.7)*(isCompactViewport ? 0.003 : 0.006);
 }
 function animBooks(t){
   allBookMeshes.forEach(m=>{
     const isHov=(m===hovMesh);
     const targetZ=(m.userData.baseZ||0)+(isHov?.05:0);
-    m.position.z+=(targetZ-m.position.z)*.16;
-    const ts=isHov?1.03:1.0;m.scale.y+=(ts-m.scale.y)*.1;
+    m.position.z+=(targetZ-m.position.z)*(isCompactViewport ? 0.11 : 0.16);
+    const ts=isHov?1.03:1.0;m.scale.y+=(ts-m.scale.y)*(isCompactViewport ? 0.08 : 0.1);
   });
 }
 function animDrawers(){
-  drawerGroups.forEach((dg,i)=>{const targetZ=drawerOpen[i]?.38:0;drawerCurZ[i]+=(targetZ-drawerCurZ[i])*.12;dg.position.z=drawerCurZ[i];});
+  drawerGroups.forEach((dg,i)=>{const targetZ=drawerOpen[i]?.38:0;drawerCurZ[i]+=(targetZ-drawerCurZ[i])*(isCompactViewport ? 0.09 : 0.12);dg.position.z=drawerCurZ[i];});
 }
 function animAmbient(t){
+  const m=isCompactViewport ? 0.55 : 1;
   // Screens breathe with a faint glow, like real backlit displays
-  lapScrM.emissiveIntensity=1.65+Math.sin(t*1.3)*.1;
-  tvSM.emissiveIntensity=1.9+Math.sin(t*.9+.4)*.12;
-  phScrM.emissiveIntensity=1.25+Math.sin(t*1.6+1.1)*.08;
+  lapScrM.emissiveIntensity=(1.65+Math.sin(t*1.3)*.1)*m;
+  tvSM.emissiveIntensity=(1.9+Math.sin(t*.9+.4)*.12)*m;
+  phScrM.emissiveIntensity=(1.25+Math.sin(t*1.6+1.1)*.08)*m;
   // Dust motes twinkle faintly instead of a flat opacity
-  dustPointsMat.opacity=.32+Math.sin(t*.6)*.05;
+  dustPointsMat.opacity=(.32+Math.sin(t*.6)*.05)*m;
   // Shelf plant leaves sway very slightly, like faint air movement
-  shelfLeaves.forEach(lf=>{lf.rotation.z=lf.userData.baseRotZ+Math.sin(t*.6+lf.userData.ph)*.035;});
+  shelfLeaves.forEach(lf=>{lf.rotation.z=lf.userData.baseRotZ+Math.sin(t*.6+lf.userData.ph)*(isCompactViewport ? 0.02 : 0.035);});
   // Ceiling stars twinkle independently, like a real night sky
-  ceilingStars.forEach(s=>{s.material.opacity=s.userData.baseOp*(.6+Math.sin(t*1.8+s.userData.ph)*.4);});
+  ceilingStars.forEach(s=>{s.material.opacity=s.userData.baseOp*(.6+Math.sin(t*1.8+s.userData.ph)*(isCompactViewport ? 0.24 : 0.4));});
   // The solar-system mural's sun breathes with a slow glow
-  muralMat.emissiveIntensity=1.1+Math.sin(t*.5)*.15;
+  muralMat.emissiveIntensity=(1.1+Math.sin(t*.5)*.15)*m;
 }
 
 window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
@@ -1627,9 +1687,11 @@ let lastT=0;
 function render(now){
   requestAnimationFrame(render);const dt=Math.min((now-lastT)/1000,.05);lastT=now;const t=now*.001;
   if(introActive)stepIntro(dt);else doMove();
-  cPos.lerp(tPos,.09);cYaw+=(tYaw-cYaw)*.1;cPitch+=(tPitch-cPitch)*.1;
+  const camBlend=isCompactViewport ? 0.16 : 0.09;
+  const rotBlend=isCompactViewport ? 0.16 : 0.1;
+  cPos.lerp(tPos,camBlend);cYaw+=(tYaw-cYaw)*rotBlend;cPitch+=(tPitch-cPitch)*rotBlend;
   const moving=!introActive&&(keys.KeyW||keys.KeyS||keys.KeyA||keys.KeyD||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight||(jActive&&(Math.abs(jDX)>4||Math.abs(jDY)>4)));
-  camera.position.copy(cPos);camera.position.y+=moving?Math.sin(t*5.2)*.013:0;
+  camera.position.copy(cPos);camera.position.y+=moving?Math.sin(t*5.2)*(isCompactViewport ? 0.008 : 0.013):0;
   const cp=Math.cos(cPitch);camera.lookAt(cPos.x+Math.sin(cYaw)*cp,cPos.y+Math.sin(cPitch),cPos.z+Math.cos(cYaw)*cp);
   animParticles(t);animLights(t);animBooks(t);animDrawers();animStudent(t);animAmbient(t);
   scene.fog.density=.021+cPos.distanceTo(tPos)*.004;
