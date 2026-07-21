@@ -18,7 +18,8 @@ Open `http://localhost:3000`.
 
 ## Deploy
 
-- Platform: Render static site
+- Production domain: `familyacademy.et`
+- HahuCloud Enterprise: upload this directory's static files to the `familyacademy.et` document root
 - Build command: `npm run build`
 - Publish directory: `.`
 
@@ -36,5 +37,5 @@ Download URLs are defined in `config.js` and point to GitHub Release assets for:
 ## Notes
 
 - Keep browser code free of secrets.
-- Keep the GitHub Release tags aligned with the latest published artifacts.
+- Keep the GitHub Release tags or `downloads.familyacademy.et` assets aligned with the latest published artifacts.
 - The landing page is intentionally cinematic and keyboard, mouse, touch, and remote friendly.
