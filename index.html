@@ -250,8 +250,8 @@ renderer.outputEncoding=THREE.sRGBEncoding;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0f0700);
 scene.fog=new THREE.FogExp2(0x0e0600,.021);
-const camera=new THREE.PerspectiveCamera(68,window.innerWidth/window.innerHeight,.04,55);
-camera.position.set(0,1.62,6.5);
+const camera=new THREE.PerspectiveCamera(58,window.innerWidth/window.innerHeight,.04,55);
+camera.position.set(0,1.62,5.8);
 
 // ====================================================
 //  HELPERS
@@ -787,7 +787,7 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
       rotateWorldAxis(upLeg,AX,-Math.PI/2);
       rotateWorldAxis(leg,AX,Math.PI/2);
     }
-    if(foreArm)rotateWorldAxis(foreArm,AX,Math.PI*.42); // elbow bends, forearm reaches toward the desk
+    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.42); // elbow bends forward so the hands land on the desk
   });
   // The hip bend above pivots the knee, not the pelvis — the pelvis itself has to be
   // lowered onto the chair by exactly the thigh length, since the thigh no longer
