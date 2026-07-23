@@ -461,7 +461,7 @@ const M={
 // ====================================================
 //  ROOM
 // ====================================================
-const RW=8.5,RH=3.5,RD=13.0;
+const RW=8.5,RH=3.5,RD=11.0;
 add(place(box(RW,.06,RD,M.floor),0,.03,0));
 add(place(box(RW,.06,RD,M.ceil),0,RH,0));
 add(place(box(RW,RH,.08,M.wall),0,RH/2,-RD/2));
@@ -1095,17 +1095,17 @@ function makePortraitTex(name,quote,W,H,ac){
 }
 // Einstein portrait
 const einMesh=mesh(new THREE.PlaneGeometry(.72,.92),new THREE.MeshStandardMaterial({map:makePortraitTex('Albert Einstein','Imagination is more\\nimportant than knowledge.',300,380,'200,160,80,.18'),roughness:.86}));
-einMesh.position.set(-3.1,2.32,-6.349);scene.add(einMesh);
-scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x8a6820,roughness:.55,metalness:.3})),-3.1,2.32,-6.37));
+einMesh.position.set(-3.1,2.32,-5.349);scene.add(einMesh);
+scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x8a6820,roughness:.55,metalness:.3})),-3.1,2.32,-5.37));
 // Tesla portrait
 const teslaMesh=mesh(new THREE.PlaneGeometry(.72,.92),new THREE.MeshStandardMaterial({map:makePortraitTex('Nikola Tesla','The present is theirs;\\nthe future is mine.',300,380,'100,160,255,.14'),roughness:.86}));
-teslaMesh.position.set(-1.8,2.32,-6.349);scene.add(teslaMesh);
-scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x304060,roughness:.55,metalness:.3})),-1.8,2.32,-6.37));
+teslaMesh.position.set(-1.8,2.32,-5.349);scene.add(teslaMesh);
+scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x304060,roughness:.55,metalness:.3})),-1.8,2.32,-5.37));
 // Back wall quotes
 const pw2=mesh(new THREE.PlaneGeometry(1.28,.52),new THREE.MeshStandardMaterial({map:makePosterTex([{text:'STUDY \u00b7 PRACTICE \u00b7 ACHIEVE',font:'bold 20px Georgia,serif',color:'#e8e0d0',y:58},{text:'Family Academy \u00b7 Learn Without Limits',font:'italic 13px Lato,sans-serif',color:'#4a3820',y:96}],384,128,'#0e160a'),roughness:.88}));
-pw2.position.set(2.2,2.7,-6.349);scene.add(pw2);scene.add(place(box(1.34,.58,.03,new THREE.MeshStandardMaterial({color:0x303828,roughness:.7})),2.2,2.7,-6.37));
+pw2.position.set(2.2,2.7,-5.349);scene.add(pw2);scene.add(place(box(1.34,.58,.03,new THREE.MeshStandardMaterial({color:0x303828,roughness:.7})),2.2,2.7,-5.37));
 const pw3=mesh(new THREE.PlaneGeometry(1.2,.5),new THREE.MeshStandardMaterial({map:makePosterTex([{text:'YOUR PROGRESS',font:'bold 22px Georgia,serif',color:'#90b8ff',y:46},{text:'IS YOUR STORY.',font:'italic 36px Georgia,serif',color:'#f0e0a0',y:92,shadow:12},{text:'Every lesson is a chapter.',font:'14px Lato,sans-serif',color:'#7a6040',y:124}],380,150,'#070d18'),roughness:.88}));
-pw3.position.set(.1,2.5,-6.349);scene.add(pw3);scene.add(place(box(1.26,.56,.03,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),.1,2.5,-6.37));
+pw3.position.set(.1,2.5,-5.349);scene.add(pw3);scene.add(place(box(1.26,.56,.03,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),.1,2.5,-5.37));
 // Calendar
 const calTex=makeTex(256,192,(ctx,W,H)=>{
   ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H);ctx.fillStyle='#c04020';ctx.fillRect(0,0,W,44);ctx.fillStyle='#fff';ctx.font='bold 16px Georgia,serif';ctx.textAlign='center';ctx.fillText('JUNE  2025',W/2,28);
@@ -1191,9 +1191,9 @@ scene.add(new THREE.Points(pGeo,dustPointsMat));
 // ====================================================
 //  CAMERA
 // ====================================================
-let tPos=new THREE.Vector3(0,1.62,6.5);let cPos=new THREE.Vector3(0,1.62,6.5);
+let tPos=new THREE.Vector3(0,1.62,5.0);let cPos=new THREE.Vector3(0,1.62,5.0);
 let tYaw=Math.PI,cYaw=Math.PI,tPitch=-.03,cPitch=-.03;
-const BOUNDS={xMin:-4.0,xMax:4.0,zMin:-6.15,zMax:6.15};const MOVE=.058;
+const BOUNDS={xMin:-4.0,xMax:4.0,zMin:-5.35,zMax:5.35};const MOVE=.058;
 const keys={};
 document.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();});
 document.addEventListener('keyup',e=>{keys[e.code]=false;});
@@ -1355,7 +1355,7 @@ function sceneText(id,fallback){
   return s?{kicker:s.kicker||fallback.kicker,title:s.title||fallback.title,copy:s.copy||fallback.copy,bullets:(s.bullets&&s.bullets.length)?s.bullets:fallback.bullets}:fallback;
 }
 const TOUR=[
-  {id:'entrance',label:'Entrance',pos:[0,1.62,6.0],yaw:Math.PI,pitch:-.03,
+  {id:'entrance',label:'Entrance',pos:[0,1.62,4.9],yaw:Math.PI,pitch:-.03,
     text:sceneText('arrival',{kicker:'Opening frame',title:'Welcome to your room.',copy:'Family Academy is a cinematic learning room for students, parents, teachers, and TV devices.',bullets:['Cinematic entrance','Warm study lighting','Your learning universe']})},
   {id:'desk',label:'Study Desk',pos:[-1.8,1.6,-1.6],focus:[-3.5,1.0,-2.8],
     text:sceneText('desk',{kicker:'Study desk',title:'Where every lesson begins.',copy:'Video, notes, and practice live together at the desk \u2014 the center of the student\u2019s learning motion.',bullets:['Video lessons with notes','Practice before the exam','Smart, timestamped notes']})},
@@ -1365,10 +1365,10 @@ const TOUR=[
     text:sceneText('shelf',{kicker:'Book shelf',title:'The shelf is the map.',copy:'Every book on this shelf opens a guide \u2014 registration, login, devices, progress, and more.',bullets:['Register and login','Notes, progress, exams','Payments, support, profiles']})},
   {id:'tv',label:'TV Corner',pos:[2.2,1.6,-3.6],focus:[4.13,2.05,-5.4],
     text:sceneText('tv',{kicker:'Living room branch',title:'The story continues on TV.',copy:'The same learning system follows you to the big screen, built for remote-first control.',bullets:['Remote-first control','Pairing and device flow','Large-screen playback']})},
-  {id:'support',label:'Support',pos:[-.3,1.7,-4.0],focus:[.5,2.5,-6.35],
-    sweep:[[-3.1,2.32,-6.35],[-1.8,2.32,-6.35],[.1,2.5,-6.35],[2.2,2.7,-6.35]],
+  {id:'support',label:'Support',pos:[-.3,1.7,-3.8],focus:[.5,2.5,-5.35],
+    sweep:[[-3.1,2.32,-5.35],[-1.8,2.32,-5.35],[.1,2.5,-5.35],[2.2,2.7,-5.35]],
     text:sceneText('support',{kicker:'Along the way',title:'A few words on the walls.',copy:'Wall quotes and calendars keep the room calm and personal on the way to the last stop.',bullets:['Support & help center','Progress you can trust','Almost there']})},
-  {id:'downloads',label:'Downloads',pos:[2.2,1.55,-3.0],focus:[3.85,.9,-3.0],
+  {id:'downloads',label:'Downloads',pos:[2.2,1.55,-2.8],focus:[3.65,.9,-2.8],
     text:sceneText('downloads',{kicker:'Download cabinet',title:'Every build, one cabinet.',copy:'Open a drawer to find the right installer for your desktop, mobile, or TV device. This is where the tour ends \u2014 ready to get started.',bullets:['Windows, macOS, Linux','Android client packages','TV app bundles and guides']})},
 ];
 let tourIndex=0;
