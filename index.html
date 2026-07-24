@@ -749,6 +749,25 @@ deskGroup.add(place(box(.005,.004,.24,new THREE.MeshStandardMaterial({color:0x18
 // a seated pose here, using the model's own bone lengths (not guessed numbers).
 // ============================================================
 let studentModel=null;
+const studentPlaceholder=new THREE.Group();
+{
+  const skin=new THREE.MeshStandardMaterial({color:0xb89474,roughness:.92});
+  const shirt=new THREE.MeshStandardMaterial({color:0x2e4369,roughness:.88});
+  const pants=new THREE.MeshStandardMaterial({color:0x284056,roughness:.9});
+  const shoe=new THREE.MeshStandardMaterial({color:0x201812,roughness:.76});
+  studentPlaceholder.add(place(sph(.12,10,skin),0,1.22,0));
+  studentPlaceholder.add(place(box(.26,.38,.18,shirt),0,1.0,0));
+  studentPlaceholder.add(place(box(.14,.16,.14,skin),-.1,.82,.02));
+  studentPlaceholder.add(place(box(.14,.16,.14,skin),.1,.82,.02));
+  studentPlaceholder.add(place(box(.12,.38,.12,pants),-.1,.58,.02));
+  studentPlaceholder.add(place(box(.12,.38,.12,pants),.1,.58,.02));
+  studentPlaceholder.add(place(box(.12,.08,.18,shoe),-.1,.34,.1));
+  studentPlaceholder.add(place(box(.12,.08,.18,shoe),.1,.34,.1));
+  studentPlaceholder.visible=true;
+  studentPlaceholder.scale.set(.95,.95,.95);
+  studentPlaceholder.rotation.y=Math.PI;
+  deskGroup.add(studentPlaceholder);
+}
 const gltfLoader=new GLTFLoader();
 // Rotates a bone by `angle` around a *world*-space axis, correctly, even when
 // its parent bone has already been rotated (THREE.Object3D.rotateOnWorldAxis
@@ -795,6 +814,7 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
   wrap.position.set(0,0,1.02); // chair seat position (matches CX,CZ below) — seat height is handled by the hip bend above
   wrap.rotation.y=Math.PI;     // the model's bind pose faces +Z; the desk sits at lower z, so flip to face it
   deskGroup.add(wrap);
+  studentPlaceholder.visible=false;
   studentModel=wrap;
 },undefined,(err)=>{console.warn('Student model failed to load:',err);});
 
